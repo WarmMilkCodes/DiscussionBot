@@ -73,7 +73,7 @@ if __name__ == "__main__":
         print("No posts found in the file. Please check the file path and content.")
     else:
         # Custom prompt (theme or question)
-        custom_prompt = "Explain how Music and Dance help students learn"
+        custom_prompt = ""
 
         # Generate a new post based on the provided posts and custom prompt
         new_post = analyze_and_generate_post(posts, custom_prompt)

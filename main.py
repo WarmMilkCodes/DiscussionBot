@@ -1,8 +1,16 @@
 from openai import OpenAI
 import os
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Load configuration
+def load_config(config_path="config.json"):
+    with open(config_path) as f:
+        return json.load(f)
+
+config = load_config()
 
 # Initialize the OpenAI client
 client = OpenAI(api_key=os.getenv("openapi_key"))  # Ensure this matches your .env file
@@ -45,13 +53,13 @@ Using the ideas and insights from the above posts, write a detailed and cohesive
 
         # Call the OpenAI API to generate the post
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Use "gpt-4" or "gpt-3.5-turbo" if you don't have access to GPT-4 Turbo
+            model=config["ai_settings"]["model"],
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that generates discussion board posts."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=300,  # Adjust the length of the generated post
-            temperature=0.7,  # Adjust the creativity of the response
+            max_tokens=config["ai_settings"]["max_tokens"],
+            temperature=config["ai_settings"]["temperature"],
         )
 
         # Extract and return the generated post

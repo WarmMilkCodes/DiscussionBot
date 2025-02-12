@@ -72,7 +72,7 @@ Using the ideas and insights from the above posts, write a detailed and cohesive
 # Example usage
 if __name__ == "__main__":
     # Path to the text file containing discussion board posts
-    file_path = "discussion_posts.txt"  # Update this to the path of your .txt file
+    file_path = config["file_paths"]["posts"]
 
     # Read posts from the file
     posts = read_posts_from_file(file_path)

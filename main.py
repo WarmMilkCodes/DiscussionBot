@@ -45,7 +45,7 @@ Using the ideas and insights from the above posts, write a detailed and cohesive
 
         # Call the OpenAI API to generate the post
         response = client.chat.completions.create(
-            model="gpt-4-turbo",  # Use "gpt-4" or "gpt-3.5-turbo" if you don't have access to GPT-4 Turbo
+            model="gpt-4o-mini",  # Use "gpt-4" or "gpt-3.5-turbo" if you don't have access to GPT-4 Turbo
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that generates discussion board posts."},
                 {"role": "user", "content": prompt}

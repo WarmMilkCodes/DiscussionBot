@@ -2,6 +2,8 @@
 
 This is a simple Python script that uses the OpenAI API to generate discussion posts based on a theme or question.
 
+![alt text](image.png)
+
 ## Setup
 
 1. **Install dependencies**:

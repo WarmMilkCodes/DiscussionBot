@@ -2,6 +2,10 @@ import streamlit as st
 import os
 from main import load_config, analyze_and_generate_post, read_posts_from_file
 from openai import OpenAI
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Page config
 st.set_page_config(
@@ -14,8 +18,6 @@ st.set_page_config(
 config = load_config()
 
 def initialize_session_state():
-    if 'api_key' not in st.session_state:
-        st.session_state.api_key = os.getenv("openapi_key", "")
     if 'model' not in st.session_state:
         st.session_state.model = config["ai_settings"]["model"]
     if 'temperature' not in st.session_state:
@@ -25,14 +27,12 @@ def initialize_session_state():
 
 initialize_session_state()
 
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv("openapi_key"))
+
 # Sidebar for settings
 with st.sidebar:
     st.title("⚙️ Settings")
-    
-    # API Key input
-    api_key = st.text_input("OpenAI API Key", 
-                           value=st.session_state.api_key,
-                           type="password")
     
     # Model selection
     model = st.selectbox("Model", 
@@ -67,9 +67,7 @@ posts = st.text_area("Existing Discussion Posts",
                     placeholder="Enter existing discussion posts here, one per line...")
 
 if st.button("Generate Post", type="primary"):
-    if not api_key:
-        st.error("Please enter your OpenAI API key in the sidebar.")
-    elif not prompt:
+    if not prompt:
         st.error("Please enter a discussion theme or question.")
     elif not posts:
         st.error("Please enter some existing discussion posts.")
@@ -79,9 +77,6 @@ if st.button("Generate Post", type="primary"):
             config["ai_settings"]["model"] = model
             config["ai_settings"]["temperature"] = temperature
             config["ai_settings"]["max_tokens"] = max_tokens
-            
-            # Initialize OpenAI client with provided API key
-            client = OpenAI(api_key=api_key)
             
             with st.spinner("Generating post..."):
                 posts_list = posts.split('\n')

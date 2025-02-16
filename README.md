@@ -43,6 +43,15 @@ python main.py
 - openai>=1.0.0
 
 
+# Run with command line
 
+```bash
+python main.py
+```
 
+# Run with UI
+
+```bash
+streamlit run app.py
+```
 

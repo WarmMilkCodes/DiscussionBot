@@ -16,9 +16,14 @@ pip install openai python-dotenv
 - Modify `config.json` file with the desired settings
 
 ## Usage
-
+No UI
 ```bash
 python main.py
+```
+
+UI
+```bash
+streamlit run app.py
 ```
 
 ## Configuration Options (config.json)

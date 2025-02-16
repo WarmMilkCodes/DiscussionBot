@@ -39,7 +39,7 @@ python main.py
 
 # Requirements
 
-- python-dotenv
+- python-dotenv==1.0.0
 - openai>=1.0.0
 - streamlit>=1.30.0
 

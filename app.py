@@ -34,20 +34,21 @@ client = OpenAI(api_key=os.getenv("openapi_key"))
 with st.sidebar:
     st.title("⚙️ Settings")
     
-    # Model selection with updated options
-    model = st.selectbox("Model", [
-        "gpt-4o-2024-08-06",
-        "gpt-4o-mini-2024-07-18",
-        "o1-2024-12-17",
-        "o1-mini-2024-09-12",
-        "o3-mini-2025-01-31",
-        "gpt-4",
-        "gpt-4-turbo",
-        "gpt-4-0125-preview",
-        "gpt-4-1106-preview",
-        "gpt-3.5-turbo",
-        "gpt-3.5-turbo-0125"
-    ], index=0)
+    # Model selection with friendly names and version values
+    model_options = {
+        "GPT-4O": "gpt-4o-2024-08-06",
+        "GPT-4O Mini": "gpt-4o-mini-2024-07-18",
+        "O1": "o1-2024-12-17",
+        "O1 Mini": "o1-mini-2024-09-12",
+        "O3 Mini": "o3-mini-2025-01-31",
+        "GPT-4": "gpt-4",
+        "GPT-4 Turbo": "gpt-4-turbo",
+    }
+    
+    model_name = st.selectbox("Model", 
+                             options=list(model_options.keys()),
+                             index=0)
+    model = model_options[model_name]
     
     # Temperature slider
     temperature = st.slider("Temperature", 

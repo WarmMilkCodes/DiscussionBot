@@ -26,7 +26,7 @@ UI
 streamlit run app.py
 ```
 
-## Configuration Options (config.json)
+## Configuration Options (config.json) - For command line version
 
 | Section      | Key          | Description                          |
 |--------------|--------------|--------------------------------------|

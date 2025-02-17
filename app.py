@@ -64,41 +64,100 @@ with st.sidebar:
                           value=st.session_state.max_tokens,
                           step=50)
 
-# Main content
-st.title("💭 AI Discussion Post Generator")
+# Create tabs for different functionalities
+tab1, tab2 = st.tabs(["Create New Post", "Respond to Post"])
 
-# Input area for discussion prompt
-prompt = st.text_area("Discussion Theme/Question", 
-                     height=100,
-                     placeholder="Enter the discussion theme or question here...")
+# Move existing main content into first tab
+with tab1:
+    st.title("💭 AI Discussion Post Generator")
 
-# Input area for existing posts
-posts = st.text_area("Existing Discussion Posts",
-                    height=200,
-                    placeholder="Enter existing discussion posts here, one per line...")
+    # Input area for discussion prompt
+    prompt = st.text_area("Discussion Theme/Question", 
+                         height=100,
+                         placeholder="Enter the discussion theme or question here...")
 
-if st.button("Generate Post", type="primary"):
-    if not prompt:
-        st.error("Please enter a discussion theme or question.")
-    elif not posts:
-        st.error("Please enter some existing discussion posts.")
-    else:
-        try:
-            # Update config with current settings
-            config["ai_settings"]["model"] = model
-            config["ai_settings"]["temperature"] = temperature
-            config["ai_settings"]["max_tokens"] = max_tokens
-            
-            with st.spinner("Generating post..."):
-                posts_list = posts.split('\n')
-                generated_post = analyze_and_generate_post(posts_list, prompt)
+    # Input area for existing posts
+    posts = st.text_area("Existing Discussion Posts",
+                        height=200,
+                        placeholder="Enter existing discussion posts here, one per line...")
+
+    if st.button("Generate Post", type="primary"):
+        if not prompt:
+            st.error("Please enter a discussion theme or question.")
+        elif not posts:
+            st.error("Please enter some existing discussion posts.")
+        else:
+            try:
+                # Update config with current settings
+                config["ai_settings"]["model"] = model
+                config["ai_settings"]["temperature"] = temperature
+                config["ai_settings"]["max_tokens"] = max_tokens
                 
-                st.success("Post generated successfully!")
-                st.markdown("### Generated Post")
-                st.markdown(generated_post)
-                
-                # Add copy button
-                st.button("📋 Copy to clipboard", 
-                         on_click=lambda: st.write(generated_post))
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}") 
+                with st.spinner("Generating post..."):
+                    posts_list = posts.split('\n')
+                    generated_post = analyze_and_generate_post(posts_list, prompt)
+                    
+                    st.success("Post generated successfully!")
+                    st.markdown("### Generated Post")
+                    st.markdown(generated_post)
+                    
+                    # Add copy button
+                    st.button("📋 Copy to clipboard", 
+                             on_click=lambda: st.write(generated_post))
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
+
+# Add new tab for responses
+with tab2:
+    st.title("💬 Discussion Response Generator")
+    
+    original_post = st.text_area(
+        "Original Discussion Post",
+        height=200,
+        placeholder="Paste the discussion post you want to respond to..."
+    )
+    
+    response_prompt = st.text_input(
+        "Additional Instructions (Optional)",
+        placeholder="E.g., 'Include a personal experience' or 'Focus on theoretical aspects'"
+    )
+    
+    if st.button("Generate Response", type="primary"):
+        if not original_post:
+            st.error("Please enter the original discussion post.")
+        else:
+            try:
+                with st.spinner("Generating response..."):
+                    response_prompt_template = f"""
+                    Create a thoughtful response to this discussion post. The response should:
+                    - Show understanding of the original post
+                    - Add meaningful insights
+                    - Be engaging and professional
+                    - Include relevant examples or evidence
+                    {f'Additional instructions: {response_prompt}' if response_prompt else ''}
+                    
+                    Original post:
+                    {original_post}
+                    """
+                    
+                    response = client.chat.completions.create(
+                        model=model,
+                        messages=[
+                            {"role": "user", "content": response_prompt_template}
+                        ],
+                        temperature=temperature,
+                        max_tokens=max_tokens
+                    )
+                    
+                    generated_response = response.choices[0].message.content
+                    
+                    st.success("Response generated successfully!")
+                    st.markdown("### Generated Response")
+                    st.markdown(generated_response)
+                    
+                    # Add copy button
+                    st.button("📋 Copy to clipboard", 
+                             on_click=lambda: st.write(generated_response),
+                             key="copy_response")
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
